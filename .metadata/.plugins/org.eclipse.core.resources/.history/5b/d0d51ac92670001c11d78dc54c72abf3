@@ -1,0 +1,45 @@
+#ifndef CORE_INC_DMA_H_
+#define CORE_INC_DMA_H_
+
+
+#define byte ((unsigned int)0x00)
+#define half_word ((unsigned int)0x01)
+#define word ((unsigned int)0x02)
+#define fifo ((unsigned int)0x01)
+#define direct_mode ((unsigned int)0x00)
+
+#define Peripheral_to_memory ((unsigned int)0x00)
+#define Memory_to_peripheral ((unsigned int)0x01)
+#define Memory_to_memory ((unsigned int)0x02)
+
+#define single_transfer ((unsigned int)0x00)
+#define BEATS4 ((unsigned int)0x01)
+#define BEATS8 ((unsigned int)0x02)
+#define BEATS16 ((unsigned int)0x03)
+
+
+
+#define DMA_REG(PORT_ID, REG_ID) (*(unsigned int *)(PORT_ID + REG_ID))
+
+#define RCC_AHB1ENR DMA_REG (0x40023800 , 0x30)
+
+
+
+#define DMA_S0CR DMA_REG (0x40026400 , 0x0010)
+#define DMA_S0NDTR DMA_REG (0x40026400 , 0x0014)
+#define DMA_S0PAR DMA_REG (0x40026400 , 0x0018)
+#define DMA_S0M0AR DMA_REG (0x40026400 , 0x001C)
+#define DMA_S0M1AR DMA_REG (0x40026400 , 0x0020)
+#define DMA_S0FCR DMA_REG (0x40026400 , 0x0024)
+
+
+
+
+void DMA_Init(void);
+void DMA_parameters(unsigned char DMA_PeripheralID,unsigned char Trigger_source,unsigned char *Source_address,
+		unsigned char *destination_address,unsigned char transfers_no,
+		unsigned char transferitem_size,unsigned char transfer_mode,
+		unsigned char transfer_type,unsigned char transfer_dir);
+
+void start_transfer (void);
+#endif /* CORE_INC_DMA_H_ */

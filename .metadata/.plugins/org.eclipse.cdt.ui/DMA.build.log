@@ -1,0 +1,36 @@
+21:43:02 **** Incremental Build of configuration Debug for project DMA ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/DMA.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/DMA.d" -MT"Core/Src/DMA.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/DMA.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'DMA2_Stream0_ISR':
+../Core/Src/main.c:28:2: warning: implicit declaration of function 'check_transmission'; did you mean 'check_transmision'? [-Wimplicit-function-declaration]
+   28 |  check_transmission();
+      |  ^~~~~~~~~~~~~~~~~~
+      |  check_transmision
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:34:6: warning: conflicting types for 'check_transmission'
+   34 | void check_transmission(void){
+      |      ^~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:28:2: note: previous implicit declaration of 'check_transmission' was here
+   28 |  check_transmission();
+      |  ^~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "DMA.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\1st\embedded\tasks\project\DMA\STM32F401CCFX_FLASH.ld" --specs=nosys.specs -Wl,-Map="DMA.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: DMA.elf
+ 
+arm-none-eabi-size   DMA.elf 
+arm-none-eabi-objdump -h -S  DMA.elf  > "DMA.list"
+arm-none-eabi-objcopy  -O ihex  DMA.elf  "DMA.hex"
+arm-none-eabi-objcopy  -O binary  DMA.elf  "DMA.bin"
+   text	   data	    bss	    dec	    hex	filename
+   3200	    144	   2376	   5720	   1658	DMA.elf
+Finished building: default.size.stdout
+ 
+Finished building: DMA.bin
+Finished building: DMA.hex
+Finished building: DMA.list
+ 
+ 
+ 
+
+21:43:04 Build Finished. 0 errors, 2 warnings. (took 2s.193ms)
+

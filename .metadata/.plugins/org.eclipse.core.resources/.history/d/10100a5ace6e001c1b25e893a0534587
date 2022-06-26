@@ -1,0 +1,78 @@
+#include "DMA.h"
+
+void DMA_Init(void){
+
+	RCC_AHB1ENR |= 1<<22;
+	DMA_S0CR &= ~(0x01<<0); //disable stream 0
+	DMA_S0CR &=~(0x07<<25); //channel0
+
+}
+
+void DMA_parameters(unsigned char* Source_address,unsigned char *destination_address,
+		unsigned char transfers_no,
+		unsigned char transferitem_size,unsigned char transfer_mode,
+		unsigned char transfer_type,unsigned char transfer_dir){
+	DMA_S0PAR =*Source_address;
+	DMA_S0M0AR =*destination_address;
+	DMA_S0CR &= ~(0x02<<16);  //periority level
+	DMA_S0CR &= ~(0x01<<5); //dma flow controller
+	DMA_S0CR |=1<<9;  //Peripheral increment mode
+	DMA_S0CR |=1<<10;  //Memory increment mode
+
+
+	if (transfer_dir == 0){
+		DMA_S0CR &= ~(transfer_dir<<6);
+	}
+	else {
+	  DMA_S0CR |= (transfer_dir<<6);
+	}
+
+	if (transferitem_size == 0){
+		  DMA_S0CR &=~(transferitem_size<<13);
+		  DMA_S0CR &=~(transferitem_size<<11);
+		}
+		else {
+		  DMA_S0CR |= (transferitem_size<<13);
+		  DMA_S0CR |= (transferitem_size<<11);
+		}
+
+	if (transfer_type == 0){
+		DMA_S0CR &= ~(transfer_type<<23); //Memory burst transfer
+		DMA_S0CR &= ~(transfer_type<<21);  //Peripheral burst transfer
+			}
+	else {
+			DMA_S0CR |= (transfer_type<<23); //Memory burst transfer
+		    DMA_S0CR |= (transfer_type<<21);  //Peripheral burst transfer
+				}
+	switch (transfer_type) {
+				case single_transfer:
+					DMA_S0NDTR =transfers_no/transferitem_size;  //transfers no
+	  	 				break;
+				case INCR4:
+					DMA_S0NDTR =transfers_no/(transferitem_size*4);
+						break;
+				case INCR4:
+					DMA_S0NDTR =transfers_no/(transferitem_size*8);
+						break;
+				case INCR4:
+					DMA_S0NDTR =transfers_no/(transferitem_size*16);
+						break;
+					default:
+						break;
+				}
+	switch (transfer_mode) {
+			case fifo:
+				DMA_S0FCR |= 0x01<<2; //enable fifo
+				DMA_S0FCR &=~( 0x01<<0); //full fifo
+  	 				break;
+			case direct_mode:
+				DMA_S0FCR &= ~(0x01<<2);
+					break;
+				default:
+					break;
+			}
+}
+
+void start_transfer (void){
+	DMA_S0CR |= (0x01<<0); //enable stream0
+}

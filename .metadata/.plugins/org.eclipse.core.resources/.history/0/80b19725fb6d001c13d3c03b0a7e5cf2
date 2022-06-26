@@ -1,0 +1,70 @@
+#include "DMA.h"
+
+void DMA_Init(void){
+
+	RCC_AHB1ENR |= 1<<22;
+	DMA_S0CR &= ~(0x01<<0); //disable stream 0
+	DMA_S0CR &=~(0x07<<25); //channel0
+
+
+}
+
+void DMA_parameters(unsigned char DMA_PeripheralID,unsigned char Trigger_source,unsigned char Source_address,
+		unsigned char destination_address,unsigned char transfers_no,
+		unsigned char transferitem_size,unsigned char transfer_mode,
+		unsigned char transfer_type){
+
+	DMA_S0NDTR =transfers_no;  //transfers no
+	DMA_S0CR &= ~(0x02<<16);  //periority level
+	DMA_S0CR &= ~(0x01<<5); //dma flow controller
+	DMA_S0CR |=1<<9;  //Peripheral increment mode
+	DMA_S0CR |1<<10;  //Memory increment mode
+	DMA_S0CR |= (0x01<<23); //Memory burst transfer
+	DMA_S0CR |= (0x01<<21);  //Peripheral burst transfer
+	switch (transferitem_size) {
+					case byte:
+						DMA_S0CR &=~(0x01<<13); //enable fifo
+		 					break;
+					case half-word:
+					    DMA_S0CR |= (0x01<<13); //enable fifo
+							 break;
+					case word:
+						DMA_S0CR |= (0x02<<13);
+						break;
+					default:
+						break;
+				}
+
+	switch (transfer_type) {
+
+				case fifo:
+					DMA_SxFCR |= 0x01<<2; //enable fifo
+					DMA_SxFCR &=~( 0x01<<0); //full fifo
+	 					break;
+				case direct_mode:
+					DMA_SxFCR &= ~(0x01<<2);
+					break;
+				default:
+					break;
+			}
+
+	switch (transfer_mode) {
+						case Peripheral-to-memory:
+							DMA_S0CR &=~(0x01<<6);
+			 					break;
+						case Memory-to-peripheral:
+						    DMA_S0CR |= (0x01<<6);
+								 break;
+						case Memory-to-memory:
+							DMA_S0CR |= (0x02<<6);
+							break;
+						default:
+							break;
+					}
+}
+
+
+
+void start_transfer (void){
+	DMA_S0CR |= (0x01<<0); //enable stream0
+}
